@@ -11,7 +11,7 @@ Vcs-Bzr: http://bzr.debian.org/apt/debian-sid/
 
 Package: apt
 Architecture: any
-Depends: ${shlibs:Depends}, debian-archive-keyring
+Depends: ${shlibs:Depends}
 Priority: important
 Replaces: libapt-pkg-doc (<< 0.3.7), libapt-pkg-dev (<< 0.3.7)
 Provides: ${libapt-pkg:provides}
