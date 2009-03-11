@@ -133,7 +133,7 @@ clean:
 	# Add here commands to clean up after the build process.
 	dh_clean debian/copyright debian/shlibs.local debian/shlibs.local.apt debian/shlibs.local.apt-utils
 
-binary-indep: apt-doc libapt-pkg-doc
+binary-indep: # apt-doc libapt-pkg-doc
 # Build architecture-independent files here.
 libapt-pkg-doc: build-doc debian/shlibs.local
 	dh_testdir -p$@
@@ -197,7 +197,7 @@ apt: build build-doc debian/shlibs.local
 	cp $(BLD)/bin/apt-* debian/$@/usr/bin/
 
 	# Remove the bits that are in apt-utils
-	rm $(addprefix debian/$@/usr/bin/apt-,$(APT_UTILS))
+	rm -f $(addprefix debian/$@/usr/bin/apt-,$(APT_UTILS))
 
 	# install the shared libs
 	find $(BLD)/bin/ -type f -name "libapt-pkg*.so.*" -exec cp -a "{}" debian/$@/usr/lib/ \;
@@ -205,7 +205,7 @@ apt: build build-doc debian/shlibs.local
 
 	cp $(BLD)/bin/methods/* debian/$@/usr/lib/apt/methods/
 	# https has its own package
-	rm debian/$@/usr/lib/apt/methods/https
+	rm -f debian/$@/usr/lib/apt/methods/https
 
 	cp $(BLD)/scripts/dselect/* debian/$@/usr/lib/dpkg/methods/apt/
 	cp -r $(BLD)/locale debian/$@/usr/share/
@@ -226,7 +226,7 @@ apt: build build-doc debian/shlibs.local
 	rm -f build/po/*.pot
 	rm -f po/*.pot
 
-	dh_installexamples -p$@ $(BLD)/docs/examples/*
+	# dh_installexamples -p$@ $(BLD)/docs/examples/*
 	dh_installman -p$@ 
 	dh_installcron -p$@
 	dh_installdocs -p$@
@@ -280,7 +280,9 @@ apt-utils: build debian/shlibs.local
 	find $(BLD)/bin/ -type f -name "libapt-inst*.so.*" -exec cp -a "{}" debian/$@/usr/lib/ \;
 	find $(BLD)/bin/ -type l -name "libapt-inst*.so.*" -exec cp -a "{}" debian/$@/usr/lib/ \;
 
-	cp $(addprefix $(BLD)/bin/apt-,$(APT_UTILS)) debian/$@/usr/bin/
+	for f in $(addprefix $(BLD)/bin/apt-,$(APT_UTILS)); do \
+	  cp $$f debian/$@/usr/bin/ || true; \
+	done
 	dh_installdocs -p$@
 	dh_installexamples -p$@
 

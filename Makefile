@@ -17,7 +17,7 @@ all headers library clean veryclean binary program doc dirs:
 	$(MAKE) -C cmdline $@
 	$(MAKE) -C ftparchive $@
 	$(MAKE) -C dselect $@
-	$(MAKE) -C doc $@
+#	$(MAKE) -C doc $@
 	$(MAKE) -C po $@
 
 # Some very common aliases
