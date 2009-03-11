@@ -28,6 +28,8 @@
 #include <apt-pkg/indexrecords.h>
 #include <apt-pkg/hashes.h>
 
+#include <list>
+
 /** \addtogroup acquire
  *  @{
  *
@@ -792,8 +794,8 @@ class pkgAcqArchive : public pkgAcquire::Item
     */
    string &StoreFilename;
 
-   /** \brief The next file for this version to try to download. */
-   pkgCache::VerFileIterator Vf;
+   std::list<pkgCache::VerFileIterator> VerFileCandidates;
+   std::list<pkgCache::VerFileIterator>::const_iterator CurVerFile;
 
    /** \brief How many (more) times to try to find a new source from
     *  which to download this package version if it fails.
@@ -802,10 +804,10 @@ class pkgAcqArchive : public pkgAcquire::Item
     */
    unsigned int Retries;
 
-   /** \brief \b true if this version file is being downloaded from a
+   /** \brief \b Positive if this version file is being downloaded from a
     *  trusted source.
     */
-   bool Trusted; 
+   int TrustLevel;
 
    /** \brief Queue up the next available file for this version. */
    bool QueueNext();
@@ -907,5 +909,29 @@ class pkgAcqFile : public pkgAcquire::Item
 };
 
 /** @} */
+
+/* For influencing the IsTrusted decision when acquiring a new version
+   of a package and for influencing which source is selected if the
+   highest version of a package is available from multiple sources.
+
+   The hook should return a integer indicating the 'trust level' that
+   a given index should be afforded for a given package.  Indices with
+   higher trust levels will be preferred.
+
+   The default behavior is to use a trust level of zero for unsigned
+   repositories and a level of one for repositories with valid
+   signatures.
+
+   The IsTrusted predicate on a pkgAcqArchive object will return true
+   when the highest trust level is non-zero, false otherwise.
+
+   A trust level can be negative.  In that case, the index will never
+   be considered as a source for the package.
+*/
+
+void
+apt_set_index_trust_level_for_package_hook (int (*hook)
+					    (pkgIndexFile *Index,
+					     const pkgCache::VerIterator &V));
 
 #endif
