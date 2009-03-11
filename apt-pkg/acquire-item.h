@@ -243,6 +243,8 @@ class pkgAcquire::Item
    /** \return \b true if this object is being fetched from a trusted source. */
    virtual bool IsTrusted() {return false;};
 
+   virtual bool IsMyFile(string file) { return file == flNotDir (DestFile); };
+ 
    /** \brief Initialize an item.
     *
     *  Adds the item to the list of items known to the acquire
@@ -748,6 +750,7 @@ class pkgAcqMetaIndex : public pkgAcquire::Item
 		     pkgAcquire::MethodConfig *Cnf);
    virtual string Custom600Headers();
    virtual string DescURI() {return RealURI; };
+   virtual bool IsMyFile (string file);
 
    /** \brief Create a new pkgAcqMetaIndex. */
    pkgAcqMetaIndex(pkgAcquire *Owner,
