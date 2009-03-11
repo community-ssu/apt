@@ -208,7 +208,7 @@ apt: build build-doc debian/shlibs.local
 	rm -f debian/$@/usr/lib/apt/methods/https
 
 	cp $(BLD)/scripts/dselect/* debian/$@/usr/lib/dpkg/methods/apt/
-	cp -r $(BLD)/locale debian/$@/usr/share/
+	cp -r $(BLD)/locale debian/$@/usr/share/ || true
 
 	cp debian/bugscript debian/$@/usr/share/bug/apt/script
 	cp debian/apt.logrotate debian/$@/etc/logrotate.d/apt
