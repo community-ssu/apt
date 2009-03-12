@@ -7,7 +7,7 @@ Uploaders: Michael Vogt <mvo@debian.org>, Otavio Salvador <otavio@debian.org>,
  Luca Bruno <lethalman88@gmail.com>, Eugene V. Lyubimkin <jackyf.devel@gmail.com>
 Standards-Version: 3.8.0
 Build-Depends: debhelper (>= 5.0), gettext (>= 0.12), libcurl3-dev
-Vcs-Bzr: http://bzr.debian.org/apt/debian-sid/
+XS-Vcs-Bzr: http://bzr.debian.org/apt/debian-sid/
 
 Package: apt
 Architecture: any
