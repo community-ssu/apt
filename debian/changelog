@@ -1,3 +1,16 @@
+apt (0.7.20.2maemo1~unreleased) unstable; urgency=medium
+	
+  * Applied maemostrip.patch
+  * Applied postrip.patch
+  * Applied gpgvinfo.patch
+  * Applied trusthook.patch
+  * Applied queuemode.patch
+  * netrc file handling
+  * Get rid of the documentation generation/installation
+  * Get rid of the lintian mechanism
+
+ -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 17 Mar 2009 17:44:05 +0100
+	
 apt (0.7.20.2) unstable; urgency=medium
 
   [ Eugene V. Lyubimkin ]
