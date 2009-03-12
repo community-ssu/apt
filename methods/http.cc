@@ -47,6 +47,7 @@
 #include "config.h"
 #include "connect.h"
 #include "rfc2553emu.h"
+#include "netrc.h"
 #include "http.h"
 
 									/*}}}*/
@@ -712,8 +713,11 @@ void HttpMethod::SendReq(FetchItem *Itm,CircleBuf &Out)
           Base64Encode(Proxy.User + ":" + Proxy.Password) + "\r\n";
 
    if (Uri.User.empty() == false || Uri.Password.empty() == false)
+   {
+      maybe_add_auth (Uri,  _config->Find ("Acquire::netrc", "/etc/apt/auth"));
       Req += string("Authorization: Basic ") + 
           Base64Encode(Uri.User + ":" + Uri.Password) + "\r\n";
+   }
    
    Req += "User-Agent: Debian APT-HTTP/1.3 ("VERSION")\r\n\r\n";
    
