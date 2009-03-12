@@ -28,6 +28,7 @@
 #include <sstream>
 
 #include "config.h"
+#include "netrc.h"
 #include "https.h"
 
 									/*}}}*/
@@ -120,7 +121,8 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    SetupProxy();
 
    // callbacks
-   curl_easy_setopt(curl, CURLOPT_URL, Itm->Uri.c_str());
+   maybe_add_auth (Uri, _config->Find ("Acquire::netrc", "/etc/apt/auth"));
+   curl_easy_setopt(curl, CURLOPT_URL, string (Uri).c_str());
    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
    curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_callback);
@@ -128,6 +130,7 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    curl_easy_setopt(curl, CURLOPT_NOPROGRESS, false);
    curl_easy_setopt(curl, CURLOPT_FAILONERROR, true);
    curl_easy_setopt(curl, CURLOPT_FILETIME, true);
+   curl_easy_setopt(curl, CURLOPT_NETRC, CURL_NETRC_IGNORED);
 
    // SSL parameters are set by default to the common (non mirror-specific) value
    // if available (or a default one) and gets overload by mirror-specific ones.
