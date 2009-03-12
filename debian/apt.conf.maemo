@@ -2,3 +2,4 @@
 // down to their knees.
 //
 Acquire::Queue-Mode "access";
+Acquire::https::Verify-Peer "false";
