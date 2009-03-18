@@ -1,4 +1,4 @@
-apt (0.7.20.2maemo1~unreleased) unstable; urgency=medium
+apt (0.7.20.2maemo1) unstable; urgency=medium
 	
   * Applied maemostrip.patch
   * Applied postrip.patch
@@ -9,7 +9,7 @@ apt (0.7.20.2maemo1~unreleased) unstable; urgency=medium
   * Get rid of the documentation generation/installation
   * Get rid of the lintian mechanism
 
- -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 17 Mar 2009 17:44:05 +0100
+ -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 18 Mar 2009 17:44:05 +0100
 	
 apt (0.7.20.2) unstable; urgency=medium
 
