@@ -181,15 +181,18 @@ bool Connect(string Host,int Port,const char *Service,int DefPort,int &Fd,
 	       }
 	       bad_addr.insert(bad_addr.begin(), Host);
 	       Owner->SetFailExtraMsg("\nFailReason: ResolveFailure");
+	       LastHost = "";
 	       return _error->Error(_("Could not resolve '%s'"),Host.c_str());
 	    }
 	    
 	    if (Res == EAI_AGAIN)
 	    {
 	       Owner->SetFailExtraMsg("\nFailReason: TmpResolveFailure");
+	       LastHost = "";
 	       return _error->Error(_("Temporary failure resolving '%s'"),
 				    Host.c_str());
 	    }
+            LastHost = "";
 	    return _error->Error(_("Something wicked happened resolving '%s:%s' (%i)"),
 				 Host.c_str(),ServStr,Res);
 	 }
