@@ -1,8 +1,9 @@
-apt (0.7.20.2maemo2~unreleased) unstable; urgency=medium
+apt (0.7.20.2maemo2) unstable; urgency=medium
 
-  *
+  * Fixed: NB#112097 apt: issue with log writing
+  * Fixed: NB#103998 Catalogue list behaving strangely and not giving catalogue list partially refreshed info note 
 
- -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 18 Mar 2009 17:44:05 +0100
+ -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 26 Mar 2009 19:17:05 +0100
 
 apt (0.7.20.2maemo1) unstable; urgency=medium
 
