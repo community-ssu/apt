@@ -1,3 +1,9 @@
+apt (0.7.20.2maemo3~unreleased) unstable; urgency=medium
+
+  *
+
+ -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 26 Mar 2009 19:25:05 +0100
+
 apt (0.7.20.2maemo2) unstable; urgency=medium
 
   * Fixed: NB#112097 apt: issue with log writing
