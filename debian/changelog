@@ -1,8 +1,9 @@
-apt (0.7.20.2maemo3~unreleased) unstable; urgency=medium
+apt (0.7.20.2maemo3) unstable; urgency=medium
 
-  *
+  * Fixed: NB#113286 apt-get signature verification issue
+  * Fixed: NB#114117 apt: recommended packages are installed by default
 
- -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 26 Mar 2009 19:25:05 +0100
+ -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 15 May 2009 21:44:05 +0100
 
 apt (0.7.20.2maemo2) unstable; urgency=medium
 
