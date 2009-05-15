@@ -1,3 +1,9 @@
+apt (0.7.20.2maemo4~unreleased) unstable; urgency=medium
+
+  *
+
+ -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 15 May 2009 21:44:05 +0100
+
 apt (0.7.20.2maemo3) unstable; urgency=medium
 
   * Fixed: NB#113286 apt-get signature verification issue
