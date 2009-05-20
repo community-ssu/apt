@@ -110,6 +110,7 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
    char curl_errorstr[CURL_ERROR_SIZE];
    long curl_responsecode;
    URI Uri = Itm->Uri;
+   char *url = NULL;
    string remotehost = Uri.Host;
 
    // TODO:
@@ -122,7 +123,11 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
 
    // callbacks
    maybe_add_auth (Uri, _config->Find ("Acquire::netrc", "/etc/apt/auth"));
-   curl_easy_setopt(curl, CURLOPT_URL, string (Uri).c_str());
+
+   // make a copy of the URI for curl
+   url = strdup(string (Uri).c_str());
+
+   curl_easy_setopt(curl, CURLOPT_URL, url);
    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
    curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_callback);
@@ -247,6 +252,9 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
 
    long curl_servdate;
    curl_easy_getinfo(curl, CURLINFO_FILETIME, &curl_servdate);
+
+   if (url)
+     free (url);
 
    // cleanup
    if(success != 0) 
