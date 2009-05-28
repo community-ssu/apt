@@ -122,7 +122,12 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
 
    // callbacks
    maybe_add_auth (Uri, _config->Find ("Acquire::netrc", "/etc/apt/auth"));
-   curl_easy_setopt(curl, CURLOPT_URL, string (Uri).c_str());
+
+   // Store the string in a variable to make sure it remains valid
+   // long enough.
+   string uri_string = string (Uri);
+
+   curl_easy_setopt(curl, CURLOPT_URL, uri_string.c_str());
    curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
    curl_easy_setopt(curl, CURLOPT_WRITEDATA, this);
    curl_easy_setopt(curl, CURLOPT_PROGRESSFUNCTION, progress_callback);
