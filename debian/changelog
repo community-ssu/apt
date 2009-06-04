@@ -1,8 +1,8 @@
-apt (0.7.20.2maemo5~unreleased) unstable; urgency=medium
+apt (0.7.20.2maemo5) unstable; urgency=medium
 
-  * 
+  * Fixed: NB#120615 SSU failed from w23-7 to w23-10 - Unable to parse package
 
- -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 28 May 2009 18:09:00 +0100
+ -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 04 Jun 2009 21:10:00 +0100
 
 apt (0.7.20.2maemo4) unstable; urgency=medium
 
