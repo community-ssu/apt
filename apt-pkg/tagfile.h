@@ -82,7 +82,7 @@ class pkgTagFile
    inline unsigned long Offset() {return iOffset;};
    bool Jump(pkgTagSection &Tag,unsigned long Offset);
 
-   pkgTagFile(FileFd *F,unsigned long Size = 32*1024);
+   pkgTagFile(FileFd *F,unsigned long Size = 64*1024);
    ~pkgTagFile();
 };
 

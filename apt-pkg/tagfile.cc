@@ -180,6 +180,9 @@ bool pkgTagFile::Jump(pkgTagSection &Tag,unsigned long Offset)
 
    if (Tag.Scan(Start,End - Start) == true)
       return true;
+
+   if (Done == false)
+      Resize(); // Maybe the size too small for the record
    
    // This appends a double new line (for the real eof handling)
    if (Fill() == false)
