@@ -3,4 +3,4 @@
 //
 Acquire::Queue-Mode "access";
 Acquire::https::Verify-Peer "false";
-APT::Install-Recommeds 0;
+APT::Install-Recommends 0;
