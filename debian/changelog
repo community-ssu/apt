@@ -1,8 +1,8 @@
-apt (0.7.20.2maemo7~unreleased) unstable; urgency=low
+apt (0.7.20.2maemo7) unstable; urgency=low
 
-  * 
+  * Fixed: NB#129298 SSU fails from w29-11 or w30-3 to w30-5 - Unable to parse vanilla package
 
- -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 18 Jun 2009 19:30:00 +0100
+ -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 23 Jul 2009 16:58:00 +0100
 
 apt (0.7.20.2maemo6) unstable; urgency=low
 
