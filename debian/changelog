@@ -1,8 +1,8 @@
-apt (0.7.20.2maemo8~unreleased) unstable; urgency=low
+apt (0.7.20.2maemo8) unstable; urgency=low
 
-  * 
+  * Fixed: NB#138150 Unable to install "bounce" game in 3G Sonera network.
 
- -- Victor M. Jaquez L. <vjaquez@maemo.org>  Thu, 23 Jul 2009 17:08:00 +0100
+ -- Mario Sanchez Prada <msanchez@igalia.com>  Fri, 11 Sep 2009 12:06:40 +0100
 
 apt (0.7.20.2maemo7) unstable; urgency=low
 
