@@ -213,8 +213,11 @@ bool HttpsMethod::Fetch(FetchItem *Itm)
 
    // set timeout
    int timeout = _config->FindI("Acquire::http::Timeout",120);
-   curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
    curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, timeout);
+   //curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
+   int dlMin = 1;
+   curl_easy_setopt(curl, CURLOPT_LOW_SPEED_LIMIT, dlMin);
+   curl_easy_setopt(curl, CURLOPT_LOW_SPEED_TIME, timeout);
 
    // debug
    if(_config->FindB("Debug::Acquire::https", false))
