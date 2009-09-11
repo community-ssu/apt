@@ -353,10 +353,11 @@ void pkgDPkgPM::DoTerminalPty(int master)
  */
 void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
 {
+   bool const Debug = _config->FindB("Debug::pkgDPkgProgressReporting",false);
    // the status we output
    ostringstream status;
 
-   if (_config->FindB("Debug::pkgDPkgProgressReporting",false) == true)
+   if (Debug == true)
       std::clog << "got from dpkg '" << line << "'" << std::endl;
 
 
@@ -371,6 +372,7 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
       'processing: install: pkg'
       'processing: configure: pkg'
       'processing: remove: pkg'
+      'processing: purge: pkg' - but for apt is it a ignored "unknown" action
       'processing: trigproc: trigger'
 	    
    */
@@ -383,28 +385,28 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
    TokSplitString(':', line, list, sizeof(list)/sizeof(list[0]));
    if( list[0] == NULL || list[1] == NULL || list[2] == NULL) 
    {
-      if (_config->FindB("Debug::pkgDPkgProgressReporting",false) == true)
+      if (Debug == true)
 	 std::clog << "ignoring line: not enough ':'" << std::endl;
       return;
    }
-   char *pkg = list[1];
-   char *action = _strstrip(list[2]);
+   const char* const pkg = list[1];
+   const char* action = _strstrip(list[2]);
 
    // 'processing' from dpkg looks like
    // 'processing: action: pkg'
    if(strncmp(list[0], "processing", strlen("processing")) == 0)
    {
       char s[200];
-      char *pkg_or_trigger = _strstrip(list[2]);
-      action =_strstrip( list[1]);
+      const char* const pkg_or_trigger = _strstrip(list[2]);
+      action = _strstrip( list[1]);
       const std::pair<const char *, const char *> * const iter =
 	std::find_if(PackageProcessingOpsBegin,
 		     PackageProcessingOpsEnd,
 		     MatchProcessingOp(action));
       if(iter == PackageProcessingOpsEnd)
       {
-	 if (_config->FindB("Debug::pkgDPkgProgressReporting",false) == true)
-	    std::clog << "ignoring unknwon action: " << action << std::endl;
+	 if (Debug == true)
+	    std::clog << "ignoring unknown action: " << action << std::endl;
 	 return;
       }
       snprintf(s, sizeof(s), _(iter->second), pkg_or_trigger);
@@ -428,11 +430,11 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
 	     << endl;
       if(OutStatusFd > 0)
 	 write(OutStatusFd, status.str().c_str(), status.str().size());
-      if (_config->FindB("Debug::pkgDPkgProgressReporting",false) == true)
+      if (Debug == true)
 	 std::clog << "send: '" << status.str() << "'" << endl;
       return;
    }
-   if(strncmp(action,"conffile",strlen("conffile")) == 0)
+   else if(strncmp(action,"conffile",strlen("conffile")) == 0)
    {
       status << "pmconffile:" << list[1]
 	     << ":"  << (PackagesDone/float(PackagesTotal)*100.0) 
@@ -440,12 +442,12 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
 	     << endl;
       if(OutStatusFd > 0)
 	 write(OutStatusFd, status.str().c_str(), status.str().size());
-      if (_config->FindB("Debug::pkgDPkgProgressReporting",false) == true)
+      if (Debug == true)
 	 std::clog << "send: '" << status.str() << "'" << endl;
       return;
    }
 
-   vector<struct DpkgState> &states = PackageOps[pkg];
+   vector<struct DpkgState> const &states = PackageOps[pkg];
    const char *next_action = NULL;
    if(PackageOpsDone[pkg] < states.size())
       next_action = states[PackageOpsDone[pkg]].state;
@@ -468,15 +470,15 @@ void pkgDPkgPM::ProcessDpkgStatusLine(int OutStatusFd, char *line)
 	     << endl;
       if(OutStatusFd > 0)
 	 write(OutStatusFd, status.str().c_str(), status.str().size());
-      if (_config->FindB("Debug::pkgDPkgProgressReporting",false) == true)
+      if (Debug == true)
 	 std::clog << "send: '" << status.str() << "'" << endl;
    }
-   if (_config->FindB("Debug::pkgDPkgProgressReporting",false) == true) 
+   if (Debug == true) 
       std::clog << "(parsed from dpkg) pkg: " << pkg 
 		<< " action: " << action << endl;
 }
-
-// DPkgPM::DoDpkgStatusFd                                           	/*{{{*/
+									/*}}}*/
+// DPkgPM::DoDpkgStatusFd						/*{{{*/
 // ---------------------------------------------------------------------
 /*
  */
@@ -513,7 +515,7 @@ void pkgDPkgPM::DoDpkgStatusFd(int statusfd, int OutStatusFd)
    dpkgbuf_pos = dpkgbuf+dpkgbuf_pos-p;
 }
 									/*}}}*/
-
+// DPkgPM::OpenLog							/*{{{*/
 bool pkgDPkgPM::OpenLog()
 {
    string logdir = _config->FindDir("Dir::Log");
@@ -536,7 +538,8 @@ bool pkgDPkgPM::OpenLog()
    }
    return true;
 }
-
+									/*}}}*/
+// DPkg::CloseLog							/*{{{*/
 bool pkgDPkgPM::CloseLog()
 {
    if(term_out)
@@ -575,7 +578,6 @@ static int racy_pselect(int nfds, fd_set *readfds, fd_set *writefds,
    return retval;
 }
 /*}}}*/
-
 // DPkgPM::Go - Run the sequence					/*{{{*/
 // ---------------------------------------------------------------------
 /* This globs the operations and calls dpkg 
@@ -587,9 +589,9 @@ static int racy_pselect(int nfds, fd_set *readfds, fd_set *writefds,
 */
 bool pkgDPkgPM::Go(int OutStatusFd)
 {
-   unsigned int MaxArgs = _config->FindI("Dpkg::MaxArgs",8*1024);   
-   unsigned int MaxArgBytes = _config->FindI("Dpkg::MaxArgBytes",32*1024);
-   bool NoTriggers = _config->FindB("DPkg::NoTriggers",false);
+   unsigned int const MaxArgs = _config->FindI("Dpkg::MaxArgs",8*1024);   
+   unsigned int const MaxArgBytes = _config->FindI("Dpkg::MaxArgBytes",32*1024);
+   bool const NoTriggers = _config->FindB("DPkg::NoTriggers",false);
 
    if (RunScripts("DPkg::Pre-Invoke") == false)
       return false;
@@ -640,16 +642,16 @@ bool pkgDPkgPM::Go(int OutStatusFd)
    // that will be [installed|configured|removed|purged] and add
    // them to the PackageOps map (the dpkg states it goes through)
    // and the PackageOpsTranslations (human readable strings)
-   for (vector<Item>::iterator I = List.begin(); I != List.end();I++)
+   for (vector<Item>::const_iterator I = List.begin(); I != List.end();I++)
    {
-      string name = (*I).Pkg.Name();
+      string const name = (*I).Pkg.Name();
       PackageOpsDone[name] = 0;
       for(int i=0; (DpkgStatesOpMap[(*I).Op][i]).state != NULL;  i++) 
       {
 	 PackageOps[name].push_back(DpkgStatesOpMap[(*I).Op][i]);
 	 PackagesTotal++;
       }
-   }   
+   }
 
    stdin_is_dev_null = false;
 
@@ -657,9 +659,9 @@ bool pkgDPkgPM::Go(int OutStatusFd)
    OpenLog();
 
    // this loop is runs once per operation
-   for (vector<Item>::iterator I = List.begin(); I != List.end();)
+   for (vector<Item>::const_iterator I = List.begin(); I != List.end();)
    {
-      vector<Item>::iterator J = I;
+      vector<Item>::const_iterator J = I;
       for (; J != List.end() && J->Op == I->Op; J++);
 
       // Generate the argument list
@@ -669,7 +671,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       
       unsigned int n = 0;
       unsigned long Size = 0;
-      string Tmp = _config->Find("Dir::Bin::dpkg","dpkg");
+      string const Tmp = _config->Find("Dir::Bin::dpkg","dpkg");
       Args[n++] = Tmp.c_str();
       Size += strlen(Args[n-1]);
       
@@ -719,11 +721,11 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 
 	 case Item::Configure:
 	 Args[n++] = "--configure";
-	 if (NoTriggers)
+	 if (NoTriggers == true)
 	    Args[n++] = "--no-triggers";
 	 Size += strlen(Args[n-1]);
 	 break;
-	 
+	
 	 case Item::Install:
 	 Args[n++] = "--unpack";
 	 Size += strlen(Args[n-1]);
@@ -856,11 +858,9 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       int Status = 0;
 
       // we read from dpkg here
-      int _dpkgin = fd[0];
+      int const _dpkgin = fd[0];
       close(fd[1]);                        // close the write end of the pipe
 
-      // the result of the waitpid call
-      int res;
       if(slave > 0)
 	 close(slave);
 
@@ -872,6 +872,8 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       sigemptyset(&sigmask);
       sigprocmask(SIG_BLOCK,&sigmask,&original_sigmask);
 
+      // the result of the waitpid call
+      int res;
       int select_ret;
       while ((res=waitpid(Child,&Status, WNOHANG)) != Child) {
 	 if(res < 0) {
@@ -938,7 +940,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 // if it was set to "keep-dpkg-runing" then we won't return
 	 // here but keep the loop going and just report it as a error
 	 // for later
-	 bool stopOnError = _config->FindB("Dpkg::StopOnError",true);
+	 bool const stopOnError = _config->FindB("Dpkg::StopOnError",true);
 	 
 	 if(stopOnError)
 	    RunScripts("DPkg::Post-Invoke");
