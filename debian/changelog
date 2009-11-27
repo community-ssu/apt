@@ -1,9 +1,3 @@
-apt (0.7.20.2maemo10~unreleased) unstable; urgency=low
-
-  * FILLME
-
- -- David Kedves <kedazo@gmail.com>  Fri, 27 Nov 2009 15:54:07 +0100
-
 apt (0.7.20.2maemo9) unstable; urgency=low
 
   * Fixes: NB#148721 - apt breaks the package installations
