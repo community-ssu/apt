@@ -1,8 +1,8 @@
-apt (0.7.20.2maemo9) unstable; urgency=low
+apt (0.7.20.2maemo9~unreleased) unstable; urgency=low
 
-  * Fixes: NB#148721 - apt breaks the package installations
+  * 
 
- -- David Kedves <kedazo@gmail.com>  Fri, 27 Nov 2009 15:50:44 +0100
+ -- David Kedves <dkedves@blumsoft.eu>  Fri, 27 Nov 2009 15:47:16 +0100
 
 apt (0.7.20.2maemo8) unstable; urgency=low
 
