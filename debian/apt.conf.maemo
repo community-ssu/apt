@@ -8,7 +8,7 @@ APT::Install-Recommends 0;
 DPkg
 {
    // let apt aggressively use dpkg triggers
-   NoTriggers "true";
+   // NoTriggers set to "true" in source;
    NoConfigure "true";
    ConfigurePending "true";
 }

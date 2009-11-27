@@ -587,9 +587,9 @@ static int racy_pselect(int nfds, fd_set *readfds, fd_set *writefds,
 */
 bool pkgDPkgPM::Go(int OutStatusFd)
 {
-   unsigned int MaxArgs = _config->FindI("Dpkg::MaxArgs",8*1024);   
-   unsigned int MaxArgBytes = _config->FindI("Dpkg::MaxArgBytes",32*1024);
-   bool NoTriggers = _config->FindB("DPkg::NoTriggers",false);
+   unsigned int const MaxArgs = _config->FindI("Dpkg::MaxArgs",8*1024);
+   unsigned int const MaxArgBytes = _config->FindI("Dpkg::MaxArgBytes",32*1024);
+   bool const NoTriggers = _config->FindB("DPkg::NoTriggers", true);
 
    if (RunScripts("DPkg::Pre-Invoke") == false)
       return false;
