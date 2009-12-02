@@ -109,11 +109,8 @@ bool pkgDPkgPM::Configure(PkgIterator Pkg)
 {
    if (Pkg.end() == true)
       return false;
-
-   bool static const NoConfigure = _config->FindB("DPkg::NoConfigure",false);
-   if (NoConfigure == false)
-      List.push_back(Item(Item::Configure,Pkg));
-
+   
+   List.push_back(Item(Item::Configure,Pkg));
    return true;
 }
 									/*}}}*/
@@ -168,9 +165,6 @@ bool pkgDPkgPM::SendV2Pkgs(FILE *F)
    // Write out the package actions in order.
    for (vector<Item>::iterator I = List.begin(); I != List.end(); I++)
    {
-      if(I->Pkg.end() == true)
-	 continue;
-
       pkgDepCache::StateCache &S = Cache[I->Pkg];
       
       fprintf(F,"%s ",I->Pkg.Name());
@@ -605,11 +599,6 @@ bool pkgDPkgPM::Go(int OutStatusFd)
    if (RunScriptsWithPkgs("DPkg::Pre-Install-Pkgs") == false)
       return false;
 
-   // support subpressing of triggers processing for special
-   // cases like d-i that runs the triggers handling manually
-   if(_config->FindB("DPkg::ConfigurePending",_config->FindB("DPkg::NoConfigure",false)) == true)
-      List.push_back(Item(Item::ConfigurePending,PkgIterator()));
-
    // map the dpkg states to the operations that are performed
    // (this is sorted in the same way as Item::Ops)
    static const struct DpkgState DpkgStatesOpMap[][7] = {
@@ -655,9 +644,6 @@ bool pkgDPkgPM::Go(int OutStatusFd)
    // and the PackageOpsTranslations (human readable strings)
    for (vector<Item>::const_iterator I = List.begin(); I != List.end();I++)
    {
-      if((*I).Pkg.end() == true)
-	 continue;
-
       string const name = (*I).Pkg.Name();
       PackageOpsDone[name] = 0;
       for(int i=0; (DpkgStatesOpMap[(*I).Op][i]).state != NULL;  i++) 
@@ -735,16 +721,11 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 
 	 case Item::Configure:
 	 Args[n++] = "--configure";
+	 if (NoTriggers == true)
+	    Args[n++] = "--no-triggers";
 	 Size += strlen(Args[n-1]);
 	 break;
-
-	 case Item::ConfigurePending:
-	 Args[n++] = "--configure";
-	 Size += strlen(Args[n-1]);
-	 Args[n++] = "--pending";
-	 Size += strlen(Args[n-1]);
-	 break;
-
+	
 	 case Item::Install:
 	 Args[n++] = "--unpack";
 	 Size += strlen(Args[n-1]);
@@ -752,13 +733,7 @@ bool pkgDPkgPM::Go(int OutStatusFd)
 	 Size += strlen(Args[n-1]);
 	 break;
       }
-
-      if (NoTriggers == true && I->Op != Item::ConfigurePending)
-      {
-	 Args[n++] = "--no-triggers";
-	 Size += strlen(Args[n-1]);
-      }
-
+      
       // Write in the file or package names
       if (I->Op == Item::Install)
       {
@@ -774,8 +749,6 @@ bool pkgDPkgPM::Go(int OutStatusFd)
       {
 	 for (;I != J && Size < MaxArgBytes; I++)
 	 {
-	    if((*I).Pkg.end() == true)
-	       continue;
 	    Args[n++] = I->Pkg.Name();
 	    Size += strlen(Args[n-1]);
 	 }	 
