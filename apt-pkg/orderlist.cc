@@ -176,7 +176,7 @@ bool pkgOrderList::OrderCritical()
 {
    FileList = 0;
 
-   Primary = &pkgOrderList::DepUnPackPreD;
+   Primary = &pkgOrderList::DepUnPackPre;
    Secondary = 0;
    RevDepends = 0;
    Remove = 0;
@@ -239,10 +239,15 @@ bool pkgOrderList::OrderUnpack(string *FileList)
    Me = this;
    qsort(List,End - List,sizeof(*List),&OrderCompareA);
 
-   if (Debug == true)
-      clog << "** Pass A" << endl;
-   if (DoRun() == false)
-      return false;
+   if (_config->Find("PackageManager::Configure","all") == "all")
+   {
+      if (Debug == true)
+	 clog << "** Pass A" << endl;
+      if (DoRun() == false)
+	 return false;
+   }
+   else if (Debug == true)
+      clog << "** Skip A (same as B for non-all Configure)" << endl;
 
    if (Debug == true)
       clog << "** Pass B" << endl;
