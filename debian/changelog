@@ -1,8 +1,8 @@
-apt (0.7.20.2maemo11~unreleased) unstable; urgency=low
+apt (0.7.20.2maemo11) unstable; urgency=low
 
-  * 
+  * Release 0.7.20.2maemo11
 
- -- Víctor Manuel Jáquez Leal <vjaquez@igalia.com>  Sat, 28 Nov 2009 12:25:43 +0100
+ -- Mario Sanchez Prada <msanchez@igalia.com>  Wed, 02 Dec 2009 16:26:06 +0100
 
 apt (0.7.20.2maemo10) unstable; urgency=low
 
