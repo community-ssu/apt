@@ -1044,6 +1044,14 @@ bool TryToInstall(pkgCache::PkgIterator Pkg,pkgDepCache &Cache,
 		  pkgProblemResolver &Fix,bool Remove,bool BrokenFix,
 		  unsigned int &ExpectedInst,bool AllowFail = true)
 {
+   /* For installations, block 'user/hidden' packages if set (default true) */
+   if (!Remove && _config->FindB("APT::Get::BlockUserHidden", true) == true)
+   {
+       const char *PkgSection = Pkg.Section();
+       if ((PkgSection != NULL) && (!strcmp (PkgSection,"user/hidden")))
+           return false;
+   }
+
    /* This is a pure virtual package and there is a single available 
       provides */
    if (Cache[Pkg].CandidateVer == 0 && Pkg->ProvidesList != 0 &&
