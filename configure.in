@@ -83,6 +83,18 @@ AC_CHECK_LIB(curl, curl_easy_init,
 
 AC_SUBST(BDBLIB)
 
+
+dnl Check whether to disable the user/hidden packages
+
+AC_ARG_ENABLE(block-hidden, [
+  --enable-block-hidden   Block 'user/hidden' packages (default)
+  --disable-block-hidden  Don't block 'user/hidden' packages],
+  block_hidden=$enableval, block_hidden="yes")
+
+if test "x$block_hidden" = "xyes"; then
+   AC_DEFINE(BLOCK_HIDDEN_PACKAGES)
+fi
+
 dnl Converts the ARCH to be something singular for this general CPU family
 dnl This is often the dpkg architecture string.
 dnl First check against the full canonical canoncial-system-type in $target

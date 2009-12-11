@@ -1312,6 +1312,9 @@ if test -n "$ac_init_help"; then
 Optional Features:
   --disable-FEATURE       do not include FEATURE (same as --enable-FEATURE=no)
   --enable-FEATURE[=ARG]  include FEATURE [ARG=yes]
+
+  --enable-block-hidden   Block 'user/hidden' packages (default)
+  --disable-block-hidden  Don't block 'user/hidden' packages
   --disable-nls           do not use Native Language Support
   --disable-rpath         do not hardcode runtime library paths
 
@@ -4700,6 +4703,23 @@ fi
 
 
 
+
+
+
+# Check whether --enable-block-hidden was given.
+if test "${enable_block_hidden+set}" = set; then
+  enableval=$enable_block_hidden; block_hidden=$enableval
+else
+  block_hidden="yes"
+fi
+
+
+if test "x$block_hidden" = "xyes"; then
+   cat >>confdefs.h <<\_ACEOF
+#define BLOCK_HIDDEN_PACKAGES 1
+_ACEOF
+
+fi
 
 { echo "$as_me:$LINENO: checking debian architecture" >&5
 echo $ECHO_N "checking debian architecture... $ECHO_C" >&6; }

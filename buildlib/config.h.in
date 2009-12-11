@@ -35,6 +35,9 @@
 /* Define the arch name string */
 #undef COMMON_ARCH
 
+/* Block packages in the 'user/hidden' section */
+#undef BLOCK_HIDDEN_PACKAGES
+
 /* The version number string */
 #undef VERSION
 
