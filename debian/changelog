@@ -1,6 +1,6 @@
-apt (0.7.20.2maemo12~unreleased) unstable; urgency=low
+apt (0.7.20.2maemo12) unstable; urgency=low
 
-  * 
+  * Fixes: NB#149147 - Remove doc files from apt deb
 
  -- Mario Sanchez Prada <msanchez@igalia.com>  Wed, 02 Dec 2009 16:27:13 +0100
 
