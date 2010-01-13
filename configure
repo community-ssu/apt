@@ -1801,7 +1801,7 @@ ac_config_headers="$ac_config_headers include/config.h:buildlib/config.h.in incl
 
 
 cat >>confdefs.h <<_ACEOF
-#define VERSION "0.7.20.2maemo12"
+#define VERSION "0.7.20.2maemo13"
 _ACEOF
 
 PACKAGE="apt"

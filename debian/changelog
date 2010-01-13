@@ -1,3 +1,11 @@
+apt (0.7.20.2maemo13) unstable; urgency=low
+
+  * Fixes: NB#146889 - apt-get segfaults when system has ran out of ptys
+  * Fixes: NB#153047 - Disable installation of user/hidden from apt-get
+  * Fixes: NB#153050 - Remove doc files from apt deb
+
+ -- Mario Sanchez Prada <msanchez@igalia.com>  Wed, 13 Jan 2010 14:03:54 +0100
+
 apt (0.7.20.2maemo12) unstable; urgency=low
 
   * Fixes: NB#149147 - Remove doc files from apt deb
