@@ -1,3 +1,9 @@
+apt (0.7.20.2maemo13.2+0cssu1) unstable; urgency=low
+
+  * Disable user/hidden blocking (E: Handler silently failed)
+
+ -- Mohammad Abu-Garbeyyeh <mohammad7410@gmail.com>  Wed, 07 Sep 2011 23:36:58 +0300
+
 apt (0.7.20.2maemo13.1+0m5) unstable; urgency=low
 
   * This entry has been added by BIFH queue processor
