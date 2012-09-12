@@ -14,6 +14,8 @@
 # create ../upload-<VER>, with all the files needed to be uploaded placed
 # in it.
 
+# export NOISY = 1
+
 export DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 export DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
@@ -23,14 +25,17 @@ ifeq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
 else
   confflags += --build $(DEB_BUILD_GNU_TYPE) --host $(DEB_HOST_GNU_TYPE)
 endif
-
 # See below
 -include build/environment.mak
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
-  export CXXFLAGS = -O0 -g -Wall
+  confcxxflags = -O0 -g -Wall
 else
-  export CXXFLAGS = -O2 -g -Wall
+  confcxxflags = -O2 -g -Wall
+endif
+
+ifneq (,$(findstring thumb,$(DEB_BUILD_OPTIONS)))
+  confcxxflags += -mthumb
 endif
 
 # Default rule
@@ -85,7 +90,7 @@ LIBAPTINST_PROVIDE=libapt-inst$(GLIBC_VER)$(LIBSTDCPP_VER)-$(LIBAPTINST_MAJOR)
 debian/shlibs.local: apt-pkg/makefile
 	# We have 3 shlibs.local files.. One for 'apt', one for 'apt-utils' and
 	# one for the rest of the packages. This ensures that each package gets
-	# the right overrides.. 
+	# the right overrides..
 	rm -rf $@ $@.apt $@.apt-utils
 	echo "libapt-pkg$(GLIBC_VER)$(LIBSTDCPP_VER) $(LIBAPTPKG_MAJOR)" > $@.apt
 
@@ -95,8 +100,8 @@ debian/shlibs.local: apt-pkg/makefile
 	echo "libapt-pkg$(GLIBC_VER)$(LIBSTDCPP_VER) $(LIBAPTPKG_MAJOR) $(LIBAPTPKG_PROVIDE)" > $@
 	echo "libapt-inst$(GLIBC_VER)$(LIBSTDCPP_VER) $(LIBAPTINST_MAJOR) $(LIBAPTINST_PROVIDE)" >> $@
 
-build: build/build-stamp	
-build-doc: build/build-doc-stamp	
+build: build/build-stamp
+build-doc: build/build-doc-stamp
 
 # Note that this is unconditionally done first as part of loading environment.mak
 # The true is needed to force make to reload environment.mak after running
@@ -142,7 +147,7 @@ libapt-pkg-doc: build-doc debian/shlibs.local
 	dh_installdirs -p$@
 #
 # libapt-pkg-doc install
-#	
+#
 	dh_installdocs -p$@
 	dh_installexamples -p$@
 #	dh_installmenu -p$@
@@ -224,7 +229,7 @@ apt: build build-doc debian/shlibs.local
 	rm -f po/*.pot
 
 #	dh_installexamples -p$@ $(BLD)/docs/examples/*
-#	dh_installman -p$@ 
+#	dh_installman -p$@
 #	dh_installcron -p$@
 # 	dh_installdocs -p$@
 # 	dh_installchangelogs -p$@
@@ -318,7 +323,7 @@ apt-transport-https: build debian/shlibs.local libapt-pkg-dev
 	dh_compress -p$@
 	dh_fixperms -p$@
 	dh_installdeb -p$@
-	dh_shlibdeps -p$@ -l`pwd`/debian/apt/usr/lib:`pwd`/debian/$@/usr/lib 
+	dh_shlibdeps -p$@ -l`pwd`/debian/apt/usr/lib:`pwd`/debian/$@/usr/lib
 	dh_gencontrol -p$@
 	dh_md5sums -p$@
 	dh_builddeb -p$@
@@ -350,7 +355,7 @@ binary: binary-indep binary-arch
 
 
 # Done by the uploader.
-#cvs update.. 
+#cvs update..
 #edit debian/changelog
 # configure.in has the version automatically updated now.
 # edit configure.in
