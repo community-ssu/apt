@@ -209,18 +209,20 @@ unsigned short debListParser::VersionHash()
       /* Strip out any spaces from the text, this undoes dpkgs reformatting
          of certain fields. dpkg also has the rather interesting notion of
          reformatting depends operators < -> <= */
-      char *I = S;
-      for (; Start != End; Start++)
       {
-	 if (isspace(*Start) == 0)
-	    *I++ = tolower(*Start);
-	 if (*Start == '<' && Start[1] != '<' && Start[1] != '=')
-	    *I++ = '=';
-	 if (*Start == '>' && Start[1] != '>' && Start[1] != '=')
-	    *I++ = '=';
-      }
+	 char *I = S;
+	 for (; Start != End; Start++)
+	 {
+	    if (isspace(*Start) == 0)
+	       *I++ = tolower(*Start);
+	    if (*Start == '<' && Start[1] != '<' && Start[1] != '=')
+	       *I++ = '=';
+	    if (*Start == '>' && Start[1] != '>' && Start[1] != '=')
+	       *I++ = '=';
+	 }
 
-      Result = AddCRC16(Result,S,I - S);
+	 Result = AddCRC16(Result,S,I - S);
+      }
    }
    
    return Result;

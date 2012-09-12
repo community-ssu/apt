@@ -1762,15 +1762,16 @@ bool DoInstall(CommandLine &CmdL)
 	 pkgCache::PkgIterator I(Cache,Cache.List[J]);
 	 if ((*Cache)[I].Install() == false)
 	    continue;
-
-	 const char **J;
-	 for (J = CmdL.FileList + 1; *J != 0; J++)
-	    if (strcmp(*J,I.Name()) == 0)
-		break;
+	 {
+	    const char **J;
+	    for (J = CmdL.FileList + 1; *J != 0; J++)
+		if (strcmp(*J,I.Name()) == 0)
+		   break;
 	 
-	 if (*J == 0) {
-	    List += string(I.Name()) + " ";
-	    VersionsList += string(Cache[I].CandVersion) + "\n";
+	    if (*J == 0) {
+		List += string(I.Name()) + " ";
+		VersionsList += string(Cache[I].CandVersion) + "\n";
+	    }
 	 }
       }
       

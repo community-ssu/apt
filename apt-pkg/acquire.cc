@@ -29,6 +29,7 @@
 #include <sys/time.h>
 #include <errno.h>
 #include <sys/stat.h>
+#include <stdio.h>
 									/*}}}*/
 
 using namespace std;
