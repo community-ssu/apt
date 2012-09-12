@@ -1,3 +1,9 @@
+apt (0.7.20.2maemo13.2+0cssu1+thumb0) unstable; urgency=low
+
+  * Thumb2 compile
+
+ -- Ivaylo Dimitrov <freemangordon@abv.bg>  Tue, 12 Sep 2012 17:51:32 +0300
+
 apt (0.7.20.2maemo13.2+0cssu1) unstable; urgency=low
 
   * Disable user/hidden blocking (E: Handler silently failed)
