@@ -149,42 +149,6 @@ int parsenetrc (char *host, char *login, char *password, char *netrcfile = NULL)
   return retcode;
 }
 
-static const char *
-get_osso_product_hardware ()
-{
-  static char *product_hardware = NULL;
-
-  if (product_hardware)
-    return product_hardware;
-
-  /* XXX - There is a library in maemo somewhere to do this, but it is
-           not included in the maemo SDK, so we have to do it
-           ourselves.  Ridiculous, I know.
-  */
-
-  FILE *f = fopen ("/proc/component_version", "r");
-  if (f)
-    {
-      char *line = NULL;
-      size_t len = 0;
-      ssize_t n;
-
-      while ((n = getline (&line, &len, f)) != -1)
-        {
-          if (n > 0 && line[n-1] == '\n')
-            line[n-1] = '\0';
-
-          if (sscanf (line, "product %as", &product_hardware) == 1)
-            break;
-        }
-
-      free (line);
-      fclose (f);
-    }
-
-  return product_hardware;
-}
-
 void maybe_add_auth (URI &Uri, string NetRCFile)
 {
   if (Uri.Password.empty () == true && Uri.User.empty () == true)
@@ -205,14 +169,6 @@ void maybe_add_auth (URI &Uri, string NetRCFile)
       if (host)
         free (host);
       free (netrcfile);
-    }
-
-    const char *product_hardware = get_osso_product_hardware ();
-    if (product_hardware && product_hardware[0] != '\0'
-        && Uri.Password.empty () == true && Uri.User.empty () == true)
-    {
-      Uri.User = string ("NOKIA-OSSO-") + string (product_hardware);
-      Uri.Password = string ("JOSHUA");
     }
   }
 }
